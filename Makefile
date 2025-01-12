@@ -1,0 +1,2 @@
+run:
+	tutor local launch
