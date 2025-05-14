@@ -21,39 +21,6 @@ export default function CourseCatalogPage() {
     "STUDIO",
   ];
 
-  const financialServicesSubItems = [
-    {
-      title: "Logistics & Transport",
-      details: ["DEMO & SALES", "POST-SALES"],
-      boxes: [
-        "Lorem ipsum dolor sit amet",
-        "Lorem ipsum dolor sit amet",
-        "Lorem ipsum dolor sit amet",
-      ],
-    },
-    {
-      title: "Supply Chain",
-      details: ["Lorem ipsum", "Lorem ipsum"],
-      boxes: [],
-    },
-    { title: "Procurement", details: ["Lorem ipsum"], boxes: [] },
-    { title: "Shipping", details: [], boxes: [] },
-    { title: "Dry Docking", details: [], boxes: [] },
-    { title: "Consulting", details: [], boxes: [] },
-  ];
-
-  const courseCategories = [
-    "Financial Services",
-    "Retail",
-    "Manufacturing",
-    "Food & Beverage",
-    "Healthcare",
-    "Automotive",
-    "Real Estate",
-    "Technology",
-    "Energy",
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-r from-pink-50 to-purple-50">
       {/* Header */}
@@ -136,9 +103,27 @@ export default function CourseCatalogPage() {
 
       {/* Course Catalog Section */}
       <section className="bg-gray-200 relative py-16">
-      <Image className="absolute top-0 right-0" src="/images/right-un.svg" alt="" width={600} height={600}/>
-      <Image className="absolute top-0 right-0" src="/images/vect.svg" alt="" width={600} height={600}/>
-      <Image className="absolute bottom-0 left-0" src="/images/left-un.svg" alt="" width={600} height={600}/>
+        <Image
+          className="absolute top-0 right-0"
+          src="/images/right-un.svg"
+          alt=""
+          width={600}
+          height={600}
+        />
+        <Image
+          className="absolute top-0 right-0"
+          src="/images/vect.svg"
+          alt=""
+          width={600}
+          height={600}
+        />
+        <Image
+          className="absolute bottom-0 left-0"
+          src="/images/left-un.svg"
+          alt=""
+          width={600}
+          height={600}
+        />
         <div className="container z-10 mx-auto px-4">
           <h2 className="text-3xl font-bold mb-2">COURSE CATALOG</h2>
           <h3 className="text-4xl font-bold text-pink-500 mb-4">
@@ -154,10 +139,7 @@ export default function CourseCatalogPage() {
             veniam.
           </p>
 
-
-          <LandingPageAccordions/>
-
-         
+          <LandingPageAccordions />
 
           <div className="text-center mt-12">
             <p className="text-gray-500  italic">...More Coming Soon...</p>
@@ -211,15 +193,15 @@ export default function CourseCatalogPage() {
             title1="an affordable mba"
             content1="Higher education can be cost prohibitive atop of the many hours of commitment it requires. But we believe that continuing your education shouldn’t put you in debt, and we empower you to chart your own course at your own speed. "
           />
-
-        
         </div>
       </section>
 
       {/* Let's Talk Section */}
       <section className="py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-pink-500 mb-4">LET'S TALK</h2>
+          <h2 className="text-4xl font-bold text-pink-500 mb-4">
+            LET&apos;S TALK
+          </h2>
           <p className="text-black mb-8 max-w-md mx-auto">
             We look forward to getting to know you better, drop us a line so we
             can sic our sales people on you. Be prepared for us to hound you
