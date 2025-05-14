@@ -21,39 +21,6 @@ export default function CourseCatalogPage() {
     "STUDIO",
   ];
 
-  const financialServicesSubItems = [
-    {
-      title: "Logistics & Transport",
-      details: ["DEMO & SALES", "POST-SALES"],
-      boxes: [
-        "Lorem ipsum dolor sit amet",
-        "Lorem ipsum dolor sit amet",
-        "Lorem ipsum dolor sit amet",
-      ],
-    },
-    {
-      title: "Supply Chain",
-      details: ["Lorem ipsum", "Lorem ipsum"],
-      boxes: [],
-    },
-    { title: "Procurement", details: ["Lorem ipsum"], boxes: [] },
-    { title: "Shipping", details: [], boxes: [] },
-    { title: "Dry Docking", details: [], boxes: [] },
-    { title: "Consulting", details: [], boxes: [] },
-  ];
-
-  const courseCategories = [
-    "Financial Services",
-    "Retail",
-    "Manufacturing",
-    "Food & Beverage",
-    "Healthcare",
-    "Automotive",
-    "Real Estate",
-    "Technology",
-    "Energy",
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-r from-pink-50 to-purple-50">
       {/* Header */}
@@ -232,7 +199,9 @@ export default function CourseCatalogPage() {
       {/* Let's Talk Section */}
       <section className="py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-pink-500 mb-4">LET'S TALK</h2>
+          <h2 className="text-4xl font-bold text-pink-500 mb-4">
+            LET&apos;S TALK
+          </h2>
           <p className="text-black mb-8 max-w-md mx-auto">
             We look forward to getting to know you better, drop us a line so we
             can sic our sales people on you. Be prepared for us to hound you
