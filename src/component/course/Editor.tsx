@@ -1,117 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { useEditor, EditorContent, Editor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import { styled } from '@mui/material/styles';
-import Link from '@tiptap/extension-link';
+import React, { useEffect, useState } from "react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
+import Link from "@tiptap/extension-link";
 import {
-  Button,
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Quote,
+  Minus,
+  Undo,
+  Redo,
+  Link as LinkIcon,
+  Heading2,
+  Heading3,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
   Dialog,
-  DialogActions,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
-  TextField
-} from '@mui/material';
-
-const StyledEditorContent = styled(EditorContent)(({ theme }) => ({
-  '& .ProseMirror': {
-    padding: theme.spacing(2),
-    border: `1px solid ${
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[700]
-        : theme.palette.grey[300]
-    }`,
-    borderRadius: theme.shape.borderRadius,
-    minHeight: '150px',
-    outline: 'none',
-    '&:focus': {
-      borderColor: theme.palette.primary.main
-    },
-    '& p.is-editor-empty:first-child::before': {
-      content: 'attr(data-placeholder)',
-      float: 'left',
-      color: theme.palette.text.disabled,
-      pointerEvents: 'none',
-      height: 0
-    }
-  },
-  // Basic formatting styles
-  '& .ProseMirror p': {
-    margin: theme.spacing(1, 0)
-  },
-  '& .ProseMirror h1': {
-    fontSize: '1.75rem',
-    fontWeight: 600
-  },
-  '& .ProseMirror h2': {
-    fontSize: '1.5rem',
-    fontWeight: 600
-  },
-  '& .ProseMirror h3': {
-    fontSize: '1.25rem',
-    fontWeight: 600
-  },
-  '& .ProseMirror ul, & .ProseMirror ol': {
-    padding: theme.spacing(0, 0, 0, 3)
-  },
-  '& .ProseMirror blockquote': {
-    borderLeft: `4px solid ${theme.palette.grey[300]}`,
-    padding: theme.spacing(0, 0, 0, 2),
-    margin: theme.spacing(1, 0)
-  },
-  '& .ProseMirror code': {
-    backgroundColor:
-      theme.palette.mode === 'dark'
-        ? theme.palette.grey[800]
-        : theme.palette.grey[100],
-    padding: theme.spacing(0.25, 0.5),
-    borderRadius: '3px',
-    fontFamily: 'monospace'
-  },
-  '& .ProseMirror .tiptap-link': {
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'none'
-    }
-  }
-}));
-
-// Toolbar item style
-interface ToolbarItemProps {
-  active?: boolean;
-}
-
-const ToolbarItem = styled('button')<ToolbarItemProps>(({ theme, active }) => ({
-  background: 'none',
-  border: 'none',
-  cursor: 'pointer',
-  padding: theme.spacing(1),
-  borderRadius: theme.shape.borderRadius,
-  color: active ? theme.palette.primary.main : theme.palette.text.primary,
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover
-  },
-  '&:disabled': {
-    color: theme.palette.text.disabled,
-    cursor: 'not-allowed'
-  }
-}));
-
-// Toolbar container
-const ToolbarContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: theme.spacing(0.5),
-  marginBottom: theme.spacing(1),
-  padding: theme.spacing(1),
-  borderRadius: `${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0 0`,
-  backgroundColor:
-    theme.palette.mode === 'dark'
-      ? theme.palette.grey[800]
-      : theme.palette.grey[100]
-}));
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Toggle } from "@/components/ui/toggle";
+import { cn } from "@/lib/utils";
+import "./tiptap.css";
 
 interface EditorToolbarProps {
   editor: Editor | null;
@@ -121,131 +39,119 @@ interface EditorToolbarProps {
 // Editor toolbar component
 const EditorToolbar: React.FC<EditorToolbarProps> = ({
   editor,
-  onOpenLinkDialog
+  onOpenLinkDialog,
 }) => {
   if (!editor) {
     return null;
   }
 
   return (
-    <ToolbarContainer>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().toggleBold().run();
-        }}
-        active={editor.isActive('bold')}
+    <div className="flex flex-wrap items-center gap-1 p-2 bg-gray-100 dark:bg-gray-800 rounded-t-md">
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("bold")}
+        onPressedChange={() => editor.chain().focus().toggleBold().run()}
         title="Bold"
       >
-        <strong>B</strong>
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().toggleItalic().run();
-        }}
-        active={editor.isActive('italic')}
+        <Bold className="h-4 w-4" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("italic")}
+        onPressedChange={() => editor.chain().focus().toggleItalic().run()}
         title="Italic"
       >
-        <em>I</em>
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().toggleHeading({ level: 2 }).run();
-        }}
-        active={editor.isActive('heading', { level: 2 })}
-        title="Heading"
+        <Italic className="h-4 w-4" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("heading", { level: 2 })}
+        onPressedChange={() =>
+          editor.chain().focus().toggleHeading({ level: 2 }).run()
+        }
+        title="Heading 2"
       >
-        H2
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().toggleHeading({ level: 3 }).run();
-        }}
-        active={editor.isActive('heading', { level: 3 })}
-        title="Subheading"
+        <Heading2 className="h-4 w-4" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("heading", { level: 3 })}
+        onPressedChange={() =>
+          editor.chain().focus().toggleHeading({ level: 3 }).run()
+        }
+        title="Heading 3"
       >
-        H3
-      </ToolbarItem>
-      <ToolbarItem
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        active={editor.isActive('bulletList')}
+        <Heading3 className="h-4 w-4" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("bulletList")}
+        onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
         title="Bullet List"
       >
-        • List
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().toggleBulletList().run();
-        }}
-        active={editor.isActive('orderedList')}
+        <List className="h-4 w-4" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("orderedList")}
+        onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
         title="Numbered List"
       >
-        1. List
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().toggleBlockquote().run();
-        }}
-        active={editor.isActive('blockquote')}
+        <ListOrdered className="h-4 w-4" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("blockquote")}
+        onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
         title="Quote"
       >
-        &quot;Quote&quot;
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().setHorizontalRule().run();
-        }}
+        <Quote className="h-4 w-4" />
+      </Toggle>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setHorizontalRule().run()}
         title="Horizontal Rule"
       >
-        —
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().undo().run();
-        }}
+        <Minus className="h-4 w-4" />
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().undo().run()}
         disabled={!editor.can().undo()}
         title="Undo"
       >
-        ↩
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          editor.chain().focus().redo().run();
-        }}
+        <Undo className="h-4 w-4" />
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().redo().run()}
         disabled={!editor.can().redo()}
         title="Redo"
       >
-        ↪
-      </ToolbarItem>
-      <ToolbarItem
-        type="button"
-        onClick={e => {
-          e.preventDefault();
-          onOpenLinkDialog();
-        }}
-        active={editor.isActive('link')}
+        <Redo className="h-4 w-4" />
+      </Button>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("link")}
+        onPressedChange={onOpenLinkDialog}
         title="Link"
       >
-        🔗
-      </ToolbarItem>
-    </ToolbarContainer>
+        <LinkIcon className="h-4 w-4" />
+      </Toggle>
+    </div>
   );
 };
 
@@ -256,30 +162,31 @@ interface TiptapProps {
 }
 
 const Tiptap: React.FC<TiptapProps> = ({
-  content = '',
+  content = "",
   onUpdate,
-  placeholder = 'Start typing...'
+  placeholder = "Start typing...",
 }) => {
-  const [linkUrl, setLinkUrl] = useState<string>('');
+  const [linkUrl, setLinkUrl] = useState<string>("");
   const [linkDialogOpen, setLinkDialogOpen] = useState<boolean>(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder
+        placeholder,
       }),
       Link.configure({
         openOnClick: false,
         linkOnPaste: true,
         HTMLAttributes: {
-          class: 'tiptap-link',
-          rel: 'noopener noreferrer',
-          target: '_blank'
-        }
-      })
+          class: "text-primary underline cursor-pointer hover:no-underline",
+          rel: "noopener noreferrer",
+          target: "_blank",
+        },
+      }),
     ],
     content,
-    onUpdate
+    onUpdate,
   });
 
   // Update content when it changes externally
@@ -292,8 +199,8 @@ const Tiptap: React.FC<TiptapProps> = ({
   const handleSetLink = () => {
     if (!editor) return;
 
-    if (linkUrl === '') {
-      editor.chain().focus().extendMarkRange('link').unsetLink().run();
+    if (linkUrl === "") {
+      editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
 
@@ -306,17 +213,18 @@ const Tiptap: React.FC<TiptapProps> = ({
     editor
       .chain()
       .focus()
-      .extendMarkRange('link')
+      .extendMarkRange("link")
       .setLink({ href: fullUrl })
       .run();
 
-    setLinkUrl('');
+    setLinkUrl("");
     setLinkDialogOpen(false);
   };
+
   const handleOpenLinkDialog = () => {
     if (!editor) return;
 
-    const previousUrl = editor.getAttributes('link').href || '';
+    const previousUrl = editor.getAttributes("link").href || "";
     setLinkUrl(previousUrl);
     setLinkDialogOpen(true);
   };
@@ -324,49 +232,62 @@ const Tiptap: React.FC<TiptapProps> = ({
   return (
     <div>
       <EditorToolbar editor={editor} onOpenLinkDialog={handleOpenLinkDialog} />
-      <StyledEditorContent editor={editor} />
+      <div
+        className={cn(
+          "rounded-b-md border border-t-0",
+          "focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
+        )}
+      >
+        <EditorContent
+          editor={editor}
+          className="prose prose-sm max-w-none [&_.ProseMirror]:p-4 [&_.ProseMirror]:min-h-[150px] [&_.ProseMirror]:outline-none"
+        />
+      </div>
 
       {/* Link Dialog */}
-      <Dialog open={linkDialogOpen} onClose={() => setLinkDialogOpen(false)}>
-        <DialogTitle>Insert Link</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="URL"
-            type="url"
-            fullWidth
-            value={linkUrl}
-            onChange={e => setLinkUrl(e.target.value)}
-            placeholder="https://example.com"
-            variant="outlined"
-            onKeyPress={e => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleSetLink();
-              }
-            }}
-          />
+      <Dialog open={linkDialogOpen} onOpenChange={setLinkDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Insert Link</DialogTitle>
+            <DialogDescription>
+              Add a URL to create a link. Leave empty to remove the link.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="url">URL</Label>
+              <Input
+                id="url"
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                placeholder="https://example.com"
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSetLink();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setLinkDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setLinkUrl("");
+                editor?.chain().focus().unsetLink().run();
+                setLinkDialogOpen(false);
+              }}
+              disabled={!editor?.isActive("link")}
+            >
+              Remove Link
+            </Button>
+            <Button onClick={handleSetLink}>Save</Button>
+          </DialogFooter>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setLinkDialogOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              setLinkUrl('');
-              editor?.chain().focus().unsetLink().run();
-              setLinkDialogOpen(false);
-            }}
-            color="secondary"
-            disabled={!editor?.isActive('link')}
-          >
-            Remove Link
-          </Button>
-          <Button onClick={handleSetLink} color="primary" variant="contained">
-            Save
-          </Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

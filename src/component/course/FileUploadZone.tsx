@@ -1,29 +1,22 @@
-import { LESSONTYPE } from "@/types/types"
-import {
-  InsertDriveFile as FileIcon,
-  VideoFile as VideoFileIcon,
-} from "@mui/icons-material"
-import {
-  Box,
-  Button,
-  Paper,
-  Typography,
-  LinearProgress,
-  Alert,
-} from "@mui/material"
-import { useDropzone } from "react-dropzone"
-
-import { uploadVideoToS3, uploadImageToS3 } from "@/app/api/rest"
-import { notifyError, notifySuccess } from "@/utils/notification"
-import React from "react"
-import { useFormContext } from "react-hook-form"
+import React from "react";
+import { useFormContext } from "react-hook-form";
+import { useDropzone } from "react-dropzone";
+import { LESSONTYPE } from "@/types/types";
+import { uploadImageToS3, uploadVideoToS3 } from "@/rest/api";
+import { notifyError, notifySuccess } from "@/lib/notification";
+import { FileVideo, FileText, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 type FileUploadProps = {
-  lessonIndex: number
-  topicIndex: number
-  lessonType: string
-  currentFile?: string
-}
+  lessonIndex: number;
+  topicIndex: number;
+  lessonType: string;
+  currentFile?: string;
+};
 
 const VIDEO_TYPES = {
   "video/mp4": [".mp4"],
@@ -31,7 +24,7 @@ const VIDEO_TYPES = {
   "video/quicktime": [".mov"],
   "video/x-msvideo": [".avi"],
   "video/webm": [".webm"],
-}
+};
 
 const DOCUMENT_TYPES = {
   "application/pdf": [".pdf"],
@@ -47,7 +40,7 @@ const DOCUMENT_TYPES = {
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": [
     ".pptx",
   ],
-}
+};
 
 const FileUploadZone: React.FC<FileUploadProps> = ({
   lessonIndex,
@@ -55,48 +48,47 @@ const FileUploadZone: React.FC<FileUploadProps> = ({
   lessonType,
   currentFile,
 }) => {
-  const { setValue, setError, clearErrors } = useFormContext()
-  const [uploading, setUploading] = React.useState(false)
-  const [uploadProgress, setUploadProgress] = React.useState(0)
+  const { setValue, setError, clearErrors } = useFormContext();
+  const [uploading, setUploading] = React.useState(false);
+  const [uploadProgress, setUploadProgress] = React.useState(0);
   const [uploadedFile, setUploadedFile] = React.useState<string>(
     currentFile || ""
-  )
+  );
 
   const acceptedTypes =
-    lessonType === LESSONTYPE.video ? VIDEO_TYPES : DOCUMENT_TYPES
+    lessonType === LESSONTYPE.video ? VIDEO_TYPES : DOCUMENT_TYPES;
 
   const handleFileUpload = async (file: File) => {
-    setUploading(true)
-    setUploadProgress(0)
+    setUploading(true);
+    setUploadProgress(0);
 
     try {
       const uploadFunction =
-        lessonType === LESSONTYPE.video ? uploadVideoToS3 : uploadImageToS3
+        lessonType === LESSONTYPE.video ? uploadVideoToS3 : uploadImageToS3;
 
-      const filePath: string = await uploadFunction(file)
+      const filePath: string = await uploadFunction(file);
 
       // Set the appropriate field based on lesson type
       const fieldName =
         lessonType === LESSONTYPE.video
           ? `topics.${topicIndex}.lessons.${lessonIndex}.video`
-          : `topics.${topicIndex}.lessons.${lessonIndex}.content`
+          : `topics.${topicIndex}.lessons.${lessonIndex}.content`;
 
-      setValue(fieldName, filePath)
-      setUploadedFile(filePath)
-      clearErrors(fieldName)
-      notifySuccess(`${lessonType} uploaded successfully!`)
+      setValue(fieldName, filePath);
+      setUploadedFile(filePath);
+      clearErrors(fieldName);
+      notifySuccess(`${lessonType} uploaded successfully!`);
     } catch (error) {
-      console.error("Upload error:", error)
-      notifyError(`Failed to upload ${lessonType.toLowerCase()}`)
+      notifyError(`Failed to upload ${lessonType.toLowerCase()}`);
       setError(`topics.${topicIndex}.lessons.${lessonIndex}.content`, {
         type: "manual",
         message: "Upload failed. Please try again.",
-      })
+      });
     } finally {
-      setUploading(false)
-      setUploadProgress(0)
+      setUploading(false);
+      setUploadProgress(0);
     }
-  }
+  };
 
   const { getRootProps, getInputProps, isDragActive, fileRejections } =
     useDropzone({
@@ -105,128 +97,102 @@ const FileUploadZone: React.FC<FileUploadProps> = ({
       disabled: uploading,
       onDrop: (acceptedFiles) => {
         if (acceptedFiles.length > 0) {
-          handleFileUpload(acceptedFiles[0])
+          handleFileUpload(acceptedFiles[0]);
         }
       },
-    })
+    });
 
   const removeFile = () => {
     const fieldName =
       lessonType === LESSONTYPE.video
         ? `topics.${topicIndex}.lessons.${lessonIndex}.video`
-        : `topics.${topicIndex}.lessons.${lessonIndex}.content`
+        : `topics.${topicIndex}.lessons.${lessonIndex}.content`;
 
-    setValue(fieldName, "")
-    setUploadedFile("")
+    setValue(fieldName, "");
+    setUploadedFile("");
     // TODO: Call API to delete file from S3 if needed
-  }
+  };
+
+  const IconComponent = lessonType === LESSONTYPE.video ? FileVideo : FileText;
 
   return (
-    <Box>
-      <Typography variant="subtitle2" sx={{ mb: 1 }}>
-        Upload {lessonType}
-      </Typography>
+    <div>
+      <h3 className="text-sm font-medium mb-2">Upload {lessonType}</h3>
 
       {!uploadedFile ? (
-        <Box
+        <div
           {...getRootProps()}
-          sx={{
-            border: "2px dashed",
-            borderColor: isDragActive ? "primary.main" : "grey.400",
-            borderRadius: 2,
-            p: 3,
-            textAlign: "center",
-            backgroundColor: isDragActive ? "action.hover" : "background.paper",
-            cursor: uploading ? "not-allowed" : "pointer",
-            transition: "all 0.2s ease",
-            "&:hover": {
-              borderColor: "primary.main",
-              backgroundColor: "action.hover",
-            },
-          }}
+          className={cn(
+            "border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-all",
+            "hover:border-primary hover:bg-secondary/10",
+            isDragActive && "border-primary bg-secondary/10",
+            uploading && "cursor-not-allowed opacity-50"
+          )}
         >
           <input {...getInputProps()} />
 
           {uploading ? (
-            <Box>
-              <Typography variant="body2" sx={{ mb: 2 }}>
-                Uploading...
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={uploadProgress}
-                sx={{ width: "100%" }}
-              />
-              <Typography variant="caption" sx={{ mt: 1 }}>
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Uploading...</p>
+              <Progress value={uploadProgress} className="max-w-xs mx-auto" />
+              <p className="text-xs text-muted-foreground">
                 {uploadProgress}% Complete
-              </Typography>
-            </Box>
+              </p>
+            </div>
           ) : (
             <>
-              {lessonType === LESSONTYPE.video ? (
-                <VideoFileIcon
-                  sx={{ fontSize: 48, color: "primary.main", mb: 2 }}
-                />
-              ) : (
-                <FileIcon sx={{ fontSize: 48, color: "primary.main", mb: 2 }} />
-              )}
+              <IconComponent className="w-12 h-12 mx-auto mb-4 text-primary" />
 
-              <Typography variant="body1" gutterBottom>
+              <p className="font-medium mb-1">
                 {isDragActive
                   ? `Drop the ${lessonType.toLowerCase()} here...`
                   : `Drag and drop ${lessonType.toLowerCase()} here, or click to browse`}
-              </Typography>
+              </p>
 
-              <Typography variant="caption" color="text.secondary">
+              <p className="text-sm text-muted-foreground">
                 Accepted formats:{" "}
                 {Object.values(acceptedTypes).flat().join(", ")}
-              </Typography>
+              </p>
             </>
           )}
-        </Box>
+        </div>
       ) : (
-        <Paper
-          variant="outlined"
-          sx={{
-            p: 2,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {lessonType === LESSONTYPE.video ? (
-              <VideoFileIcon sx={{ mr: 2, color: "primary.main" }} />
-            ) : (
-              <FileIcon sx={{ mr: 2, color: "primary.main" }} />
-            )}
-            <Box>
-              <Typography variant="body2" fontWeight="medium">
-                {uploadedFile.split("/").pop()}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {lessonType} uploaded successfully
-              </Typography>
-            </Box>
-          </Box>
+        <Card>
+          <CardContent className="flex items-center justify-between p-4">
+            <div className="flex items-center space-x-3">
+              <IconComponent className="w-6 h-6 text-primary" />
+              <div>
+                <p className="text-sm font-medium">
+                  {uploadedFile.split("/").pop()}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {lessonType} uploaded successfully
+                </p>
+              </div>
+            </div>
 
-          <Button
-            color="error"
-            size="small"
-            onClick={removeFile}
-            disabled={uploading}
-          >
-            Remove
-          </Button>
-        </Paper>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={removeFile}
+              disabled={uploading}
+            >
+              <X className="w-4 h-4 mr-1" />
+              Remove
+            </Button>
+          </CardContent>
+        </Card>
       )}
 
       {fileRejections.length > 0 && (
-        <Alert severity="error" sx={{ mt: 2 }}>
-          {fileRejections[0].errors[0].message}
+        <Alert variant="destructive" className="mt-4">
+          <AlertDescription>
+            {fileRejections[0].errors[0].message}
+          </AlertDescription>
         </Alert>
       )}
-    </Box>
-  )
-}
-export default FileUploadZone
+    </div>
+  );
+};
+
+export default FileUploadZone;

@@ -40,7 +40,7 @@ export interface CourseCreate {
   category?: string;
   target?: string;
   brief?: string;
-  overview?: string;
+  overview: string;
   price?: number;
   tax?: number;
   thumbnail?: string;
@@ -102,3 +102,12 @@ export type LessonDto = {
   createdOn?: Date;
   updatedOn?: Date;
 };
+export enum LESSONTYPE {
+  video = "video",
+  document = "document",
+  html = "html",
+  pdf = "pdf",
+  quiz = "quiz",
+  text = "text",
+}
+export type TableClickType = "delete" | "edit" | "view";

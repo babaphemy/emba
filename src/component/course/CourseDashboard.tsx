@@ -28,7 +28,20 @@ import {
 import Link from "next/link";
 import GeneralTableFooter from "../table/GeneralTableFooter";
 import SubjectForm from "./SubjectForm";
-
+import { useForm } from "react-hook-form";
+import { CourseCreate } from "@/types/types";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+const defaultValues: CourseCreate = {
+  user: "",
+  overview: "",
+  courseName: "",
+};
+export const schema = yup.object({
+  user: yup.string().required("User is required"),
+  courseName: yup.string().required("Course name is required"),
+  overview: yup.string().required("Overview is required"),
+});
 export const categories = ["web"];
 const isStudent = false;
 const tableHeaderCells: string[] = ["Subject", "Class", "Lessons", "Action"];
@@ -42,8 +55,13 @@ const CourseDashboard = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const processedSubjects: any[] = [];
-  const emptyRows = 0;
   const isLoading = false;
+
+  const form = useForm<CourseCreate>({
+    mode: "all",
+    defaultValues,
+    resolver: yupResolver(schema),
+  });
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchInput(event.target.value);
@@ -57,25 +75,22 @@ const CourseDashboard = () => {
     setSelectedCategory(value);
   };
 
-  const handleTableClick = () => {
-    // Implementation
-  };
-
-  const handleChangePage = (newPage: number) => {
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (rows: number) => {
-    setRowsPerPage(rows);
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const handleClose = () => {
-    setOpenModal(false);
-  };
-
-  const handleSubmit = () => {
-    // Implementation
+  const handleSubmit = (data: CourseCreate) => {
+    console.log(data);
   };
 
   return (
@@ -169,7 +184,6 @@ const CourseDashboard = () => {
               </Table>
             </div>
 
-            {/* Pagination component */}
             <GeneralTableFooter
               data={processedSubjects}
               rowsPerPage={rowsPerPage}

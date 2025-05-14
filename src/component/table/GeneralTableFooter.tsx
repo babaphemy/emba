@@ -1,24 +1,40 @@
+import React from "react";
 import {
-  Box,
-  IconButton,
-  TableFooter,
-  TablePagination,
-  TableRow
-} from '@mui/material';
-import React from 'react';
-import { useTheme } from '@mui/material/styles';
-import FirstPageIcon from '@mui/icons-material/FirstPage';
-import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import LastPageIcon from '@mui/icons-material/LastPage';
-import { TablePaginationActionsProps } from '@mui/material/TablePagination/TablePaginationActions';
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TableCell, TableRow } from "@/components/ui/table";
+
 export interface DataItem {
   [key: string]: unknown;
 }
-export function ListsPagination(props: TablePaginationActionsProps) {
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onPageChange } = props;
 
+interface ListPaginationProps {
+  count: number;
+  page: number;
+  rowsPerPage: number;
+  onPageChange: (
+    event: React.MouseEvent<HTMLButtonElement>,
+    newPage: number
+  ) => void;
+}
+
+export function ListPagination({
+  count,
+  page,
+  rowsPerPage,
+  onPageChange,
+}: ListPaginationProps) {
   const handleFirstPageButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -44,44 +60,44 @@ export function ListsPagination(props: TablePaginationActionsProps) {
   };
 
   return (
-    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
-      <IconButton
+    <div className="flex items-center space-x-2">
+      <Button
+        variant="outline"
+        size="icon"
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton
+        <ChevronsLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
         onClick={handleBackButtonClick}
         disabled={page === 0}
         aria-label="previous page"
       >
-        {theme.direction === 'rtl' ? (
-          <KeyboardArrowRight />
-        ) : (
-          <KeyboardArrowLeft />
-        )}
-      </IconButton>
-      <IconButton
+        <ChevronLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
-        {theme.direction === 'rtl' ? (
-          <KeyboardArrowLeft />
-        ) : (
-          <KeyboardArrowRight />
-        )}
-      </IconButton>
-      <IconButton
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </Box>
+        <ChevronsRight className="h-4 w-4" />
+      </Button>
+    </div>
   );
 }
 
@@ -92,9 +108,7 @@ interface GeneralTableFooterProps {
     _event: React.MouseEvent<HTMLButtonElement> | null,
     _newPage: number
   ) => void;
-  handleChangeRowsPerPage?: (
-    _event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
+  handleChangeRowsPerPage?: (value: string) => void;
   data: DataItem[];
 }
 
@@ -103,30 +117,47 @@ const GeneralTableFooter: React.FC<GeneralTableFooterProps> = ({
   page = 0,
   handleChangePage = () => {},
   handleChangeRowsPerPage = () => {},
-  data
+  data,
 }) => {
+  const pageCount = Math.ceil(data.length / rowsPerPage);
+  const startIndex = page * rowsPerPage + 1;
+  const endIndex = Math.min((page + 1) * rowsPerPage, data.length);
+
   return (
-    <TableFooter>
-      <TableRow>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-          colSpan={8}
-          count={data?.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          SelectProps={{
-            inputProps: {
-              'aria-label': 'rows per page'
-            },
-            native: true
-          }}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          ActionsComponent={ListsPagination}
-          style={{ borderBottom: 'none' }}
-        />
-      </TableRow>
-    </TableFooter>
+    <TableRow>
+      <TableCell colSpan={8} className="py-2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <p className="text-sm font-medium">Rows per page:</p>
+              <Select
+                value={String(rowsPerPage)}
+                onValueChange={handleChangeRowsPerPage}
+              >
+                <SelectTrigger className="h-8 w-[70px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="5">5</SelectItem>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="25">25</SelectItem>
+                  <SelectItem value="-1">All</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {startIndex}-{endIndex} of {data.length}
+            </p>
+          </div>
+          <ListPagination
+            count={data.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+          />
+        </div>
+      </TableCell>
+    </TableRow>
   );
 };
 

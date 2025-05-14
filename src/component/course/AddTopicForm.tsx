@@ -1,100 +1,125 @@
-import { Add, Delete } from '@mui/icons-material';
+import React from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import { Plus, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Button,
-  Grid,
-  TextField,
-  Typography
-} from '@mui/material';
-import { GridExpandMoreIcon } from '@mui/x-data-grid';
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 const AddTopicForm = () => {
   const { control, watch } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'topics'
+    name: "topics",
   });
+
   const addTopic = () => {
-    append({ title: '', week: '' });
+    append({ title: "", week: "", description: "", orderIndex: "" });
   };
+
   return (
-    <Box>
-      <>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h6">Add Topics</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Add topics for course: {watch('courseName')}
-          </Typography>
-        </Box>
+    <div>
+      <div className="mb-6">
+        <h2 className="text-2xl font-semibold">Add Topics</h2>
+        <p className="text-muted-foreground">
+          Add topics for course: {watch("courseName")}
+        </p>
+      </div>
+
+      <Accordion type="single" collapsible defaultValue="item-0">
         {fields.map((field, index) => (
-          <Accordion key={field.id} defaultExpanded={index === 0}>
-            <AccordionSummary expandIcon={<GridExpandMoreIcon />}>
-              <Typography>
-                {watch(`topics.${index}.topic.title`) || `Topic ${index + 1}`}
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={2}>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Controller
-                    name={`topics.${index}.topic.title`}
-                    control={control}
-                    rules={{ required: 'Topic title is required' }}
-                    render={({ field, fieldState: { error } }) => (
-                      <TextField
-                        {...field}
-                        label="Topic Title"
-                        required
-                        fullWidth
-                        error={!!error}
-                        helperText={error?.message}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Controller
-                    name={`topics.${index}.topic.description`}
-                    control={control}
-                    render={({ field }) => (
-                      <TextField {...field} label="Description" fullWidth />
-                    )}
-                  />
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Controller
-                    name={`topics.${index}.topic.orderIndex`}
-                    control={control}
-                    render={({ field }) => (
-                      <TextField {...field} label="Index" fullWidth />
-                    )}
-                  />
-                </Grid>
-              </Grid>
+          <AccordionItem
+            key={field.id}
+            value={`item-${index}`}
+            className="mb-4"
+          >
+            <AccordionTrigger className="text-lg font-medium">
+              {watch(`topics.${index}.title`) || `Topic ${index + 1}`}
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={control}
+                  name={`topics.${index}.title`}
+                  rules={{ required: "Topic title is required" }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Topic Title *</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter topic title" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name={`topics.${index}.description`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Enter description" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
+                  name={`topics.${index}.orderIndex`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Index</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="Enter order index"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               {index > 0 && (
                 <Button
-                  color="error"
+                  variant="destructive"
                   onClick={() => remove(index)}
-                  startIcon={<Delete />}
-                  sx={{ mt: 2 }}
+                  className="mt-4"
                 >
+                  <Trash2 className="mr-2 h-4 w-4" />
                   Remove Topic
                 </Button>
               )}
-            </AccordionDetails>
-          </Accordion>
+            </AccordionContent>
+          </AccordionItem>
         ))}
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-          <Button startIcon={<Add />} onClick={addTopic}>
-            Add Topic
-          </Button>
-        </Box>
-      </>
-    </Box>
+      </Accordion>
+
+      <div className="mt-4">
+        <Button onClick={addTopic} variant="outline">
+          <Plus className="mr-2 h-4 w-4" />
+          Add Topic
+        </Button>
+      </div>
+    </div>
   );
 };
+
 export default AddTopicForm;

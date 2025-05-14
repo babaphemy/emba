@@ -1,145 +1,94 @@
-import { formStyles } from '@/styles/form.styles';
-import {
-  Box,
-  Button,
-  Container,
-  MenuItem,
-  Select,
-  TextField,
-  Typography
-} from '@mui/material';
-import React from 'react';
-import SendIcon from '@mui/icons-material/Send';
-import { Controller } from 'react-hook-form';
-import useClasses from '@/hook/useClasses';
-
+import React from "react";
 import {
   Control,
   FieldErrors,
   UseFormHandleSubmit,
-  UseFormGetValues
-} from 'react-hook-form';
-import { SubjectCreate } from '@/types/api';
+  UseFormGetValues,
+} from "react-hook-form";
+import { Send } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { CourseCreate } from "@/types/types";
 
 interface SubjectFormProps {
   form: {
-    control: Control<SubjectCreate>;
-    handleSubmit: UseFormHandleSubmit<SubjectCreate>;
-    getValues: UseFormGetValues<SubjectCreate>;
+    control: Control<CourseCreate>;
+    handleSubmit: UseFormHandleSubmit<CourseCreate>;
+    getValues: UseFormGetValues<CourseCreate>;
     formState: {
-      errors: FieldErrors<SubjectCreate>;
+      errors: FieldErrors<CourseCreate>;
     };
   };
   isLoading: boolean;
-  onSubmit: (_data: SubjectCreate) => void;
+  onSubmit: (_data: CourseCreate) => void;
 }
 
 const SubjectForm: React.FC<SubjectFormProps> = ({
-  form: {
-    control,
-    handleSubmit,
-    formState: { errors }
-  },
+  form,
   isLoading,
-  onSubmit
+  onSubmit,
 }) => {
-  const { allClasses } = useClasses();
-
   return (
-    <Container maxWidth="md">
-      <Box my={3} component="form" onSubmit={handleSubmit(onSubmit)}>
-        <Box className="bg-black">
-          <Box mb={2}>
-            <Typography component="label" sx={formStyles.label} htmlFor="title">
-              Subject Title
-            </Typography>
-            <Controller
-              name="title"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  id="title" // Added id for accessibility
-                  fullWidth
-                  error={!!errors?.title}
-                  helperText={
-                    (errors?.title?.message as string) ||
-                    'Please enter a subject title.'
-                  }
-                />
-              )}
-            />
-          </Box>
-          <Box mb={2}>
-            <Typography
-              component="label"
-              sx={formStyles.label}
-              htmlFor="overview"
-            >
-              Subject Overview
-            </Typography>
-            <Controller
-              name="overview"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  id="overview" // Added id for accessibility
-                  fullWidth
-                  multiline
-                  rows={4}
-                  error={!!errors?.overview}
-                  helperText={
-                    (errors?.overview?.message as string) ||
-                    'Please provide an overview.'
-                  }
-                />
-              )}
-            />
-          </Box>
-          <Box>
-            <Typography
-              component="label"
-              sx={formStyles.label}
-              htmlFor="class_id"
-            >
-              Class
-            </Typography>
-            <Controller
-              name="class_id"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  id="class_id"
-                  fullWidth
-                  error={!!errors?.class_id}
-                  inputProps={{
-                    style: { borderRadius: 8 }
-                  }}
-                >
-                  {allClasses?.map(classroom => (
-                    <MenuItem key={classroom.id} value={classroom.id ?? ''}>
-                      {classroom.title}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </Box>
-        </Box>
-        <Button
-          type="submit"
-          disabled={isLoading}
-          fullWidth
-          variant="contained"
-          sx={formStyles.button}
-          endIcon={<SendIcon />}
-        >
-          {isLoading && 'Saving...'}
-        </Button>
-      </Box>
-    </Container>
+    <div className="w-full max-w-2xl mx-auto">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="courseName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Course Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter course name" {...field} />
+                </FormControl>
+                <FormDescription>Please enter a course name.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="overview"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Subject Overview</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter subject overview"
+                    rows={4}
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>Please provide an overview.</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" disabled={isLoading} className="w-full">
+            {isLoading ? (
+              "Saving..."
+            ) : (
+              <>
+                Submit
+                <Send className="ml-2 h-4 w-4" />
+              </>
+            )}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 

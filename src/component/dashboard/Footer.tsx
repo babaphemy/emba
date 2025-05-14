@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="mt-4 rounded-t-lg bg-white p-6 text-center">
         <p className="text-sm text-gray-600">
           Copyright (c) {new Date().getFullYear()}{" "}
-          <strong className="font-semibold">Horace Learning</strong>. Powered by{" "}
+          <strong className="font-semibold">Upper Courses</strong>. Powered by{" "}
           <Link
             href="https://reachai.online/"
             target="_blank"

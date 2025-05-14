@@ -1,24 +1,17 @@
-import React from 'react';
-import {
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-  Stack
-} from '@mui/material';
+import React from "react";
+import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 interface NoRecordFoundProps {
   text: string;
+  colSpan?: number;
 }
 
-const NoRecordFound: React.FC<NoRecordFoundProps> = ({ text }) => {
+const NoRecordFound: React.FC<NoRecordFoundProps> = ({ text, colSpan = 5 }) => {
   return (
     <TableBody>
       <TableRow>
-        <TableCell colSpan={5}>
-          <Stack sx={{ width: '100%' }} spacing={2}>
-            <Typography sx={{ textAlign: 'center' }}>{text}</Typography>
-          </Stack>
+        <TableCell colSpan={colSpan} className="h-24 text-center">
+          <div className="text-muted-foreground">{text}</div>
         </TableCell>
       </TableRow>
     </TableBody>

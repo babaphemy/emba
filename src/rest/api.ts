@@ -104,6 +104,37 @@ const addSubjectComplete = async (
   }
   return resp.json();
 };
+const uploadVideoToS3 = async (videoBinary: Blob): Promise<string> => {
+  const formData = new FormData();
+
+  formData.append("video", videoBinary);
+
+  const headers = {
+    method: "POST",
+    body: formData,
+  };
+  const resp = await fetch(`${basePath}info/s3/video`, headers);
+  if (!resp.ok) {
+    throw new Error(resp.statusText);
+  }
+  return resp.json();
+};
+
+const uploadImageToS3 = async (imageBinary: Blob): Promise<string> => {
+  const formData = new FormData();
+
+  formData.append("image", imageBinary);
+
+  const headers = {
+    method: "PUT",
+    body: formData,
+  };
+  const resp = await fetch(`${basePath}info/s3/upload`, headers);
+  if (!resp.ok) {
+    throw new Error(resp.statusText);
+  }
+  return resp.json();
+};
 export {
   getUsers,
   getAllUsers,
@@ -116,4 +147,6 @@ export {
   getAllNavigationItems,
   getSideNavItems,
   addSubjectComplete,
+  uploadImageToS3,
+  uploadVideoToS3,
 };

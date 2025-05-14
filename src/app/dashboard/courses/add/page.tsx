@@ -1,29 +1,18 @@
 "use client";
 
-import AddCourseForm from "@/components/courses/AddCourseForm";
-import AddLessonForm from "@/components/courses/AddLessonForm";
-import AddTopicForm from "@/components/courses/AddTopicForm";
-import ReviewSubjectForm from "@/components/courses/ReviewSubjectForm";
+import { courseCompleteSchema } from "@/app/schema/courseSchema";
+import AddCourseForm from "@/component/course/AddCourseForm";
+import AddLessonForm from "@/component/course/AddLessonForm";
+import AddTopicForm from "@/component/course/AddTopicForm";
+import ReviewSubjectForm from "@/component/course/ReviewSubjectForm";
+import { notifyError, notifySuccess } from "@/lib/notification";
 import { addSubjectComplete } from "@/rest/api";
-import { courseCompleteSchema } from "@/schema/courseSchema";
 import { CourseComplete, LESSONTYPE } from "@/types/types";
-import { notifyError, notifySuccess } from "@/utils/notification";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Box,
-  Button,
-  Container,
-  LinearProgress,
-  Paper,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-} from "@mui/material";
+import { Save, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { JSX, useState } from "react";
-
 import {
   FieldError,
   FieldErrors,
@@ -32,6 +21,11 @@ import {
 } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import * as yup from "yup";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
 
 // Recursive function to render nested errors
 const renderErrors = (errors: FieldErrors, parentKey = ""): JSX.Element[] => {
@@ -40,9 +34,9 @@ const renderErrors = (errors: FieldErrors, parentKey = ""): JSX.Element[] => {
 
     if (value && typeof value === "object" && "message" in value) {
       return (
-        <Typography key={fieldName} variant="body2">
+        <p key={fieldName} className="text-sm">
           {fieldName}: {(value as FieldError).message}
-        </Typography>
+        </p>
       );
     } else if (Array.isArray(value)) {
       return value.flatMap((item, index) => {
@@ -66,8 +60,8 @@ const SubjectCreatePage = () => {
   const queryClient = useQueryClient();
 
   const defaultValues: CourseComplete = {
-    id: undefined, // Optional
-    user: session?.id || "", // Must be provided from session
+    id: undefined,
+    user: session?.id || "",
     courseName: "",
     category: "",
     target: "",
@@ -82,14 +76,14 @@ const SubjectCreatePage = () => {
     updatedOn: new Date(),
     topics: [
       {
-        id: undefined, // Optional
+        id: undefined,
         title: "",
         description: "",
         cid: "",
         orderIndex: undefined,
         lessons: [
           {
-            id: undefined, // Optional
+            id: undefined,
             title: "",
             tid: "",
             type: LESSONTYPE.video,
@@ -100,7 +94,7 @@ const SubjectCreatePage = () => {
             updatedOn: new Date(),
           },
         ],
-        dueDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // Default due date 3 months ahead
+        dueDate: new Date(new Date().setMonth(new Date().getMonth() + 3)),
         createdOn: new Date(),
         updatedOn: new Date(),
       },
@@ -109,7 +103,7 @@ const SubjectCreatePage = () => {
 
   const methods = useForm({
     defaultValues,
-    resolver: yupResolver(defaultValues),
+    resolver: yupResolver(courseCompleteSchema),
   });
 
   const steps = ["Subject Details", "Add Topics", "Add Lessons", "Review"];
@@ -157,63 +151,105 @@ const SubjectCreatePage = () => {
   };
 
   return (
-    <Container maxWidth="lg">
-      <Box sx={{ mt: 4, mb: 4 }}>
-        <FormProvider {...methods}>
-          <Paper elevation={3} sx={{ p: 4 }}>
-            {isLoading && <LinearProgress sx={{ mb: 2 }} />}
+    <div className="container mx-auto max-w-7xl px-4 py-8">
+      <FormProvider {...methods}>
+        <Card>
+          <CardContent className="p-6">
+            {isLoading && <Progress value={30} className="mb-4" />}
 
-            <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+            {/* Custom Stepper */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between">
+                {steps.map((label, index) => (
+                  <div key={label} className="flex-1 relative">
+                    <div className="flex items-center">
+                      <div
+                        className={cn(
+                          "w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors",
+                          activeStep >= index
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-gray-200 text-gray-600"
+                        )}
+                      >
+                        {index + 1}
+                      </div>
+                      {index < steps.length - 1 && (
+                        <div
+                          className={cn(
+                            "h-0.5 flex-1 mx-2 transition-colors",
+                            activeStep > index ? "bg-primary" : "bg-gray-200"
+                          )}
+                        />
+                      )}
+                    </div>
+                    <p
+                      className={cn(
+                        "text-sm mt-2 transition-colors",
+                        activeStep >= index
+                          ? "text-foreground font-medium"
+                          : "text-muted-foreground"
+                      )}
+                    >
+                      {label}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
             {/* Global error message display */}
             {!isLoading && Object.keys(methods.formState.errors).length > 0 && (
-              <Box sx={{ mb: 2, color: "error.main" }}>
-                <Typography variant="body1">
-                  There are errors in the form:
-                </Typography>
-                {renderErrors(methods.formState.errors)}
-              </Box>
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>
+                  <p className="font-semibold mb-2">
+                    There are errors in the form:
+                  </p>
+                  <div className="space-y-1">
+                    {renderErrors(methods.formState.errors)}
+                  </div>
+                </AlertDescription>
+              </Alert>
             )}
 
             <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <Box sx={{ mb: 4 }}>{renderStepContent(activeStep)}</Box>
+              <div className="mb-8">{renderStepContent(activeStep)}</div>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <div className="flex items-center justify-between">
                 <Button
+                  type="button"
+                  variant="outline"
                   onClick={handleBack}
                   disabled={activeStep === 0 || isLoading}
                 >
+                  <ChevronLeft className="mr-2 h-4 w-4" />
                   Back
                 </Button>
-                <Box>
-                  <Button
-                    variant="contained"
-                    type={activeStep === steps.length - 1 ? "submit" : "button"}
-                    onClick={
-                      activeStep === steps.length - 1 ? undefined : handleNext
-                    }
-                    disabled={isLoading}
-                    startIcon={
-                      activeStep === steps.length - 1 ? <SaveIcon /> : undefined
-                    }
-                  >
-                    {activeStep === steps.length - 1
-                      ? "Create Subject"
-                      : "Next"}
-                  </Button>
-                </Box>
-              </Box>
+
+                <Button
+                  type={activeStep === steps.length - 1 ? "submit" : "button"}
+                  onClick={
+                    activeStep === steps.length - 1 ? undefined : handleNext
+                  }
+                  disabled={isLoading}
+                >
+                  {activeStep === steps.length - 1 ? (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      Create Subject
+                    </>
+                  ) : (
+                    <>
+                      Next
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
             </form>
-          </Paper>
-        </FormProvider>
-      </Box>
-    </Container>
+          </CardContent>
+        </Card>
+      </FormProvider>
+    </div>
   );
 };
 

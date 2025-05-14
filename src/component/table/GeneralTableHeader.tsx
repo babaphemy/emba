@@ -1,30 +1,34 @@
-import { TableCell, TableHead, TableRow } from '@mui/material';
-import React from 'react';
+import React from "react";
+import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+
 interface GeneralTableHeaderProps {
   cells: string[];
 }
 
 const GeneralTableHeader: React.FC<GeneralTableHeaderProps> = ({ cells }) => {
+  const getAlignment = (index: number, totalCells: number) => {
+    if (index === 0) return "text-left";
+    if (index === totalCells - 1) return "text-right";
+    return "text-center";
+  };
+
   return (
-    <TableHead sx={{ background: '#F7FAFF' }}>
-      <TableRow>
+    <TableHeader>
+      <TableRow className="bg-gray-50 hover:bg-gray-50">
         {cells.map((cell, index) => (
-          <TableCell
+          <TableHead
             key={cell}
-            sx={{ borderBottom: '1px solid #F7FAFF', fontSize: '13.5px' }}
-            align={
-              index === 0
-                ? 'left'
-                : index === cells.length - 1
-                  ? 'right'
-                  : 'center'
-            }
+            className={cn(
+              "text-[13.5px] font-medium",
+              getAlignment(index, cells.length)
+            )}
           >
             {cell}
-          </TableCell>
+          </TableHead>
         ))}
       </TableRow>
-    </TableHead>
+    </TableHeader>
   );
 };
 

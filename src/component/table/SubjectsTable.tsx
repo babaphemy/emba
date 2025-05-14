@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 import {
+  Table,
   TableBody,
   TableCell,
-  TableRow,
   TableHead,
-  Paper,
-  Table,
-  TableContainer
-} from '@mui/material';
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card } from "@/components/ui/card";
 
 interface SubjectsTableProps {
   subjects: string[];
@@ -15,27 +15,31 @@ interface SubjectsTableProps {
 
 const SubjectsTable: React.FC<SubjectsTableProps> = ({ subjects }) => {
   return (
-    <TableContainer component={Paper} sx={{ my: 2 }}>
+    <Card className="my-4">
       <Table>
-        <TableHead>
+        <TableHeader>
           <TableRow>
-            <TableCell
-              align="left"
-              style={{ fontWeight: 'bold', fontSize: '16px' }}
-            >
+            <TableHead className="font-bold text-base">
               Subjects - {subjects?.length || 0}
-            </TableCell>
+            </TableHead>
           </TableRow>
-        </TableHead>
+        </TableHeader>
         <TableBody>
           {subjects?.map((subject, index) => (
             <TableRow key={index}>
-              <TableCell align="left">{subject}</TableCell>
+              <TableCell>{subject}</TableCell>
             </TableRow>
           ))}
+          {(!subjects || subjects.length === 0) && (
+            <TableRow>
+              <TableCell className="text-center text-muted-foreground">
+                No subjects available
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
-    </TableContainer>
+    </Card>
   );
 };
 
