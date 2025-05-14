@@ -24,7 +24,7 @@ export default function CourseCatalogPage() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-pink-50 to-purple-50">
       {/* Header */}
-      <header className="sticky top-0 z-50  shadow-sm">
+      <header className=" top-0 z-50  shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <span className="text-2xl font-bold text-pink-500">
@@ -50,15 +50,15 @@ export default function CourseCatalogPage() {
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r  from-pink-50 to-purple-50 py-16">
-        <div className="container mx-auto flex items-center  flex-col sm:flex-row ">
+        <div className="w-full grid grid-cols-1 items-center sm:grid-cols-12 ">
           <Image
             src="/images/header-image.png"
             alt="Classroom"
-            className="mt-8 h-[500px]"
+            className="mt-8 sm:col-span-6 object-cover h-[400px] sm:h-[600px]"
             width={900}
             height={1000}
           />
-          <div className="ml-0 sm:-ml-10 px-4">
+          <div className="w-full sm:col-span-6 ml-0 sm:-ml-10 px-4">
             <div className="flex flex-col  items-center sm:items-start justify-center sm:justify-start">
               <h1 className="text-2xl md:text-4xl font-bold mb-4">
                 TRANSFORM YOUR
