@@ -1,14 +1,14 @@
-'use client';
-import { addSubjectComplete } from '@/app/api/rest';
-import AddCourseForm from '@/components/courses/AddCourseForm';
-import AddLessonForm from '@/components/courses/AddLessonForm';
-import AddTopicForm from '@/components/courses/AddTopicForm';
-import ReviewSubjectForm from '@/components/courses/ReviewSubjectForm';
-import { courseCompleteSchema } from '@/schema/courseSchema';
-import { CourseComplete, LESSONTYPE } from '@/types/types';
-import { notifyError, notifySuccess } from '@/utils/notification';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Save as SaveIcon } from '@mui/icons-material';
+"use client";
+
+import AddCourseForm from "@/components/courses/AddCourseForm";
+import AddLessonForm from "@/components/courses/AddLessonForm";
+import AddTopicForm from "@/components/courses/AddTopicForm";
+import ReviewSubjectForm from "@/components/courses/ReviewSubjectForm";
+import { addSubjectComplete } from "@/rest/api";
+import { courseCompleteSchema } from "@/schema/courseSchema";
+import { CourseComplete, LESSONTYPE } from "@/types/types";
+import { notifyError, notifySuccess } from "@/utils/notification";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Box,
   Button,
@@ -18,28 +18,27 @@ import {
   Step,
   StepLabel,
   Stepper,
-  Typography
-} from '@mui/material';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { JSX, useState } from 'react';
+  Typography,
+} from "@mui/material";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { JSX, useState } from "react";
 
 import {
   FieldError,
   FieldErrors,
   FormProvider,
-  useForm
-} from 'react-hook-form';
-import { useMutation, useQueryClient } from 'react-query';
-import * as yup from 'yup';
-
+  useForm,
+} from "react-hook-form";
+import { useMutation, useQueryClient } from "react-query";
+import * as yup from "yup";
 
 // Recursive function to render nested errors
-const renderErrors = (errors: FieldErrors, parentKey = ''): JSX.Element[] => {
+const renderErrors = (errors: FieldErrors, parentKey = ""): JSX.Element[] => {
   return Object.entries(errors).flatMap(([key, value]) => {
     const fieldName = parentKey ? `${parentKey}.${key}` : key;
 
-    if (value && typeof value === 'object' && 'message' in value) {
+    if (value && typeof value === "object" && "message" in value) {
       return (
         <Typography key={fieldName} variant="body2">
           {fieldName}: {(value as FieldError).message}
@@ -48,11 +47,11 @@ const renderErrors = (errors: FieldErrors, parentKey = ''): JSX.Element[] => {
     } else if (Array.isArray(value)) {
       return value.flatMap((item, index) => {
         const arrayKey = `${fieldName}[${index}]`;
-        return item && typeof item === 'object'
+        return item && typeof item === "object"
           ? renderErrors(item, arrayKey)
           : [];
       });
-    } else if (value && typeof value === 'object') {
+    } else if (value && typeof value === "object") {
       return renderErrors(value as FieldErrors, fieldName);
     }
     return [];
@@ -61,7 +60,7 @@ const renderErrors = (errors: FieldErrors, parentKey = ''): JSX.Element[] => {
 
 const SubjectCreatePage = () => {
   const router = useRouter();
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading] = useState(false);
   const queryClient = useQueryClient();
@@ -108,35 +107,34 @@ const SubjectCreatePage = () => {
     ],
   };
 
-
   const methods = useForm({
     defaultValues,
-    resolver: yupResolver(defaultValues)
+    resolver: yupResolver(defaultValues),
   });
 
-  const steps = ['Subject Details', 'Add Topics', 'Add Lessons', 'Review'];
+  const steps = ["Subject Details", "Add Topics", "Add Lessons", "Review"];
 
   const handleNext = async () => {
-    setActiveStep(prev => prev + 1);
+    setActiveStep((prev) => prev + 1);
   };
 
   const handleBack = () => {
-    setActiveStep(prev => Math.max(prev - 1, 0));
+    setActiveStep((prev) => Math.max(prev - 1, 0));
   };
 
   const { mutate } = useMutation({
     mutationFn: addSubjectComplete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subjects'] });
-      notifySuccess('New Subject created successfully');
-      router.push('/lms-courses');
+      queryClient.invalidateQueries({ queryKey: ["subjects"] });
+      notifySuccess("New Subject created successfully");
+      router.push("/lms-courses");
       methods.reset(defaultValues);
       return;
     },
     onError: () => {
-      notifyError('Failed to create new subject, Try again!!!');
+      notifyError("Failed to create new subject, Try again!!!");
       return;
-    }
+    },
   });
 
   async function onSubmit(values: yup.InferType<typeof courseCompleteSchema>) {
@@ -164,10 +162,9 @@ const SubjectCreatePage = () => {
         <FormProvider {...methods}>
           <Paper elevation={3} sx={{ p: 4 }}>
             {isLoading && <LinearProgress sx={{ mb: 2 }} />}
-            
 
             <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-              {steps.map(label => (
+              {steps.map((label) => (
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                 </Step>
@@ -176,7 +173,7 @@ const SubjectCreatePage = () => {
 
             {/* Global error message display */}
             {!isLoading && Object.keys(methods.formState.errors).length > 0 && (
-              <Box sx={{ mb: 2, color: 'error.main' }}>
+              <Box sx={{ mb: 2, color: "error.main" }}>
                 <Typography variant="body1">
                   There are errors in the form:
                 </Typography>
@@ -187,7 +184,7 @@ const SubjectCreatePage = () => {
             <form onSubmit={methods.handleSubmit(onSubmit)}>
               <Box sx={{ mb: 4 }}>{renderStepContent(activeStep)}</Box>
 
-              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Button
                   onClick={handleBack}
                   disabled={activeStep === 0 || isLoading}
@@ -197,7 +194,7 @@ const SubjectCreatePage = () => {
                 <Box>
                   <Button
                     variant="contained"
-                    type={activeStep === steps.length - 1 ? 'submit' : 'button'}
+                    type={activeStep === steps.length - 1 ? "submit" : "button"}
                     onClick={
                       activeStep === steps.length - 1 ? undefined : handleNext
                     }
@@ -207,8 +204,8 @@ const SubjectCreatePage = () => {
                     }
                   >
                     {activeStep === steps.length - 1
-                      ? 'Create Subject'
-                      : 'Next'}
+                      ? "Create Subject"
+                      : "Next"}
                   </Button>
                 </Box>
               </Box>

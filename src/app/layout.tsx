@@ -1,6 +1,12 @@
+"use client";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { SessionProvider } from "next-auth/react";
+import { CookiesProvider } from "react-cookie";
+import { AppProvider } from "@/context/AppContext";
+import ToastProvider from "@/lib/toast-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,11 +17,14 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export const metadata: Metadata = {
-  title: "Polyvoyant - Courses",
-  description: "Explore our most popular professional development courses",
-};
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    },
+  },
+});
 
 export default function RootLayout({
   children,
@@ -27,7 +36,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>
+            <CookiesProvider defaultSetOptions={{ path: "/" }}>
+              <AppProvider>
+                <>
+                  {children}
+                  <ToastProvider />
+                </>
+              </AppProvider>
+            </CookiesProvider>
+          </SessionProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

@@ -1,34 +1,23 @@
-import { Box, Link, Stack, Typography } from '@mui/material';
+import Link from "next/link";
 
 const Footer = () => {
   return (
-    <>
-      <Stack
-        sx={{
-          backgroundColor: '#fff',
-          p: '25px',
-          borderRadius: '10px 10px 0 0',
-          textAlign: 'center',
-          mt: '15px'
-        }}
-        className="footer"
-      >
-        <Box>
-          <Typography>
-            Copyright (c) {new Date().getFullYear()}{' '}
-            <strong>Horace Learning</strong>. Powered by{' '}
-            <Link
-              href="https://reachai.online/"
-              target="_blank"
-              underline="none"
-              rel="noreferrer"
-            >
-              Everlasting Systems
-            </Link>
-          </Typography>
-        </Box>
-      </Stack>
-    </>
+    <footer className="footer">
+      <div className="mt-4 rounded-t-lg bg-white p-6 text-center">
+        <p className="text-sm text-gray-600">
+          Copyright (c) {new Date().getFullYear()}{" "}
+          <strong className="font-semibold">Horace Learning</strong>. Powered by{" "}
+          <Link
+            href="https://reachai.online/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600 hover:text-blue-700 hover:underline"
+          >
+            Everlasting Systems
+          </Link>
+        </p>
+      </div>
+    </footer>
   );
 };
 
