@@ -51,7 +51,8 @@ const CoursesPage = () => {
         </Box>
   </Box>
   <Grid container spacing={3}>
-  <Grid size={{xs:12,md:8,lg:5}}><QuickStats /></Grid></Grid>
+  <Grid item xs={12} md={8} lg={5}><QuickStats /></Grid>
+  </Grid>
   </Box>
 }
 
