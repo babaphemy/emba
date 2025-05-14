@@ -3,7 +3,7 @@ import { useParams } from "next/navigation"
 
 const EditCoursePage = () => {
     const params = useParams()
-    const {cid} = params
-    return <Box>Edit Course {cid}</Box>
+    const {id} = params
+    return <Box>Edit Course {id}</Box>
 }
 export default EditCoursePage
