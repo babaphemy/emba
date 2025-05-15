@@ -44,8 +44,8 @@ export default function LandingPageAccordions() {
             <div className="flex justify-between items-center w-full">
               <h2 className="text-2xl font-bold">{item.title}</h2>
               <div className="relative w-6 h-6">
-                <Plus className="absolute inset-0 transition-all group-data-[state=open]:opacity-0 group-data-[state=open]:scale-50" />
-                <Minus className="absolute inset-0 transition-all group-data-[state=closed]:opacity-0 group-data-[state=closed]:scale-50" />
+                <Plus className="absolute rounded-full bg-[#1E2025] text-white inset-0 transition-all group-data-[state=open]:opacity-0 group-data-[state=open]:scale-50" />
+                <Minus className="absolute inset-0 transition-all rounded-full bg-[#1E2025] text-white group-data-[state=closed]:opacity-0 group-data-[state=closed]:scale-50" />
               </div>
             </div>
           </AccordionTrigger>
