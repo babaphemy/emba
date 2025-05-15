@@ -14,7 +14,7 @@ const navData: TNavBar<TIcon>[] = [
     path: "/dashboard",
     icon: {
       type: "mui",
-      name: "GridViewIcon",
+      name: "Dashboard",
       path: "string",
     },
     allowed_roles: ["Admin"],
@@ -36,7 +36,7 @@ const navData: TNavBar<TIcon>[] = [
     path: "#",
     icon: {
       type: "mui",
-      name: "SchoolIcon",
+      name: "Book",
       path: "string",
     },
     allowed_roles: ["Admin", "Student"],
@@ -141,7 +141,7 @@ const LeftSide: React.FC<SidebarProps> = ({ toogleActive }) => {
       </div>
 
       <ScrollArea className="flex-1 py-4">
-        <nav className="space-y-1 px-3">
+        <nav className="space-y-3 px-3">
           {menuData.map((item, index: number) => {
             return <SubMenu item={item} key={index} />;
           })}

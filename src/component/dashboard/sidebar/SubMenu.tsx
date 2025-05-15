@@ -65,7 +65,7 @@ const SubMenuComponent = ({ item }: { item: TNavBar<React.JSX.Element> }) => {
       </Link>
 
       {subnav && item.sub_nav && (
-        <div className="ml-9 mt-2 space-y-1">
+        <div className="ml-9 mt-2 space-y-3">
           {item.sub_nav.map((subItem, index) => {
             const isSubActive = pathname === subItem.path;
             return (
@@ -73,7 +73,7 @@ const SubMenuComponent = ({ item }: { item: TNavBar<React.JSX.Element> }) => {
                 href={subItem.path}
                 key={index}
                 className={cn(
-                  "block rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                  "block rounded-md px-3 py-4 text-sm font-medium transition-colors",
                   "hover:bg-accent hover:text-accent-foreground",
                   isSubActive && "bg-accent text-accent-foreground"
                 )}
