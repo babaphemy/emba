@@ -68,7 +68,7 @@ const TopicAccordion: React.FC<{
     name: `topics.${topicIndex}.lessons`,
   });
 
-  const handleLessonTypeChange = (lessonIndex: number, newType: string) => {
+  const handleLessonTypeChange = (lessonIndex: number) => {
     // Clear file fields when lesson type changes
     setValue(`topics.${topicIndex}.lessons.${lessonIndex}.video`, "");
     setValue(`topics.${topicIndex}.lessons.${lessonIndex}.content`, "");
@@ -120,7 +120,7 @@ const TopicAccordion: React.FC<{
                           <Select
                             onValueChange={(value) => {
                               field.onChange(value);
-                              handleLessonTypeChange(lessonIndex, value);
+                              handleLessonTypeChange(lessonIndex);
                             }}
                             defaultValue={field.value}
                           >

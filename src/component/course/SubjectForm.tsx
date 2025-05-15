@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Control,
-  FieldErrors,
-  UseFormHandleSubmit,
-  UseFormGetValues,
-} from "react-hook-form";
+
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,15 +15,10 @@ import {
 } from "@/components/ui/form";
 import { CourseCreate } from "@/types/types";
 
+import { UseFormReturn } from "react-hook-form";
+
 interface SubjectFormProps {
-  form: {
-    control: Control<CourseCreate>;
-    handleSubmit: UseFormHandleSubmit<CourseCreate>;
-    getValues: UseFormGetValues<CourseCreate>;
-    formState: {
-      errors: FieldErrors<CourseCreate>;
-    };
-  };
+  form: UseFormReturn<CourseCreate>;
   isLoading: boolean;
   onSubmit: (_data: CourseCreate) => void;
 }

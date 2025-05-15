@@ -1,56 +1,58 @@
+"use client";
 
-import man from "@/assets/img/man.webp"
-import subtract from "@/assets/img/subtract.webp"
-import LoginComponent from "@/components/auth/LoginComponent"
-import Footer from "@/components/Footer"
-import Header from "@/components/Header"
-import { loginStyles } from "@/styles/loginStyles"
-import { Box, Container, Typography } from "@mui/material"
-import Image from "next/image"
-import { generateMetadata } from "../metadata"
-export const metadata = generateMetadata({
-  title: "Horace Learning Management Solution | Horace Courses",
-  description:
-    "Horace Online Courses. STEM focused online courses for all ages. Members login",
-});
-const Login = () => {
-  
+import Image from "next/image";
+import LoginComponent from "@/component/user/LoginComponent";
+
+import Header from "@/component/home/Header";
+import Footer from "@/component/dashboard/Footer";
+
+export default function Login() {
   return (
-    <Box component={"div"} id="login-component">
+    <div id="login-component" className="min-h-screen flex flex-col">
       <Header />
-      <Box sx={loginStyles.body}>
-        <Container maxWidth="lg">
-          <Box sx={loginStyles.center}>
-            <Box sx={loginStyles.box}>
-              <LoginComponent />
-              <Box sx={loginStyles.subtract}>
-                <Image
-                  src={subtract}
-                  alt="logo"
-                  width={0}
-                  height={0}
-                  sizes="100%"
-                  style={{ width: "27rem", height: "45rem" }}
-                />
-                <Box sx={loginStyles.glass}>
-                  <Typography variant="h5" sx={loginStyles.note}>
-                    Smart Learning. Limitless Growth.
-                  </Typography>
+
+      <main className="flex-grow bg-gray-50 dark:bg-gray-900 py-10 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center items-center">
+            <div className="w-full max-w-6xl flex flex-col md:flex-row bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+              <div className="w-full md:w-1/2 p-4 md:p-6">
+                <LoginComponent />
+              </div>
+
+              <div className="hidden md:block w-1/2 relative">
+                <div className="absolute inset-0">
                   <Image
-                    src={man}
-                    alt="man holding a laptop"
+                    src="/images/right-un.svg"
+                    alt="Decorative background"
+                    width={0}
+                    height={0}
+                    sizes="100%"
+                    className="w-full h-full object-cover"
+                    priority
+                  />
+                </div>
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                  <h2 className="text-2xl font-bold text-white mb-8">
+                    Smart Learning. Limitless Growth.
+                  </h2>
+
+                  <Image
+                    src={"/images/first.png"}
+                    alt="Man holding a laptop"
                     width={420}
                     height={400}
+                    className="max-w-full"
+                    priority
                   />
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-      <Footer />
-    </Box>
-  )
-}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
 
-export default Login
+      <Footer />
+    </div>
+  );
+}

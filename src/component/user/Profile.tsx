@@ -47,8 +47,8 @@ const Profile = () => {
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
             <AvatarImage
-              src={user?.dp}
-              alt={user?.first_name || "Horace User"}
+              src={user?.image || ""}
+              alt={user?.firstname || "Horace User"}
             />
             <AvatarFallback>{firstNameInitial}</AvatarFallback>
           </Avatar>
@@ -57,7 +57,7 @@ const Profile = () => {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <div className="flex items-center space-x-2 p-3">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.dp} alt={userName} />
+            <AvatarImage src={user?.image || ""} alt={userName} />
             <AvatarFallback>{firstNameInitial}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col space-y-1">

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Hero = () => {
   return (
     <section className="bg-gradient-to-r from-pink-50 to-purple-50 py-16">
@@ -18,10 +20,12 @@ const Hero = () => {
             boost your expertise, and advance your career.
           </p>
         </div>
-        <img
+        <Image
           src="/api/placeholder/400/300"
           alt="Classroom"
           className="mt-8 rounded-lg shadow-lg"
+          width={400}
+          height={300}
         />
       </div>
     </section>

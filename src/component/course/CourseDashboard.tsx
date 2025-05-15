@@ -54,7 +54,6 @@ const CourseDashboard = () => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const processedSubjects: any[] = [];
   const isLoading = false;
 
   const form = useForm<CourseCreate>({
@@ -82,10 +81,8 @@ const CourseDashboard = () => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ): void => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const handleChangeRowsPerPage = (value: string): void => {
+    setRowsPerPage(parseInt(value, 10));
     setPage(0);
   };
 
@@ -158,7 +155,7 @@ const CourseDashboard = () => {
                 <TableBody>
                   {/* Use the original SubjectsTableBody component here */}
                   {/* Or convert it to use shadcn/ui components */}
-                  {processedSubjects.length === 0 && !isLoading ? (
+                  {[].length === 0 && !isLoading ? (
                     <TableRow>
                       <TableCell
                         colSpan={tableHeaderCells.length}
@@ -185,7 +182,7 @@ const CourseDashboard = () => {
             </div>
 
             <GeneralTableFooter
-              data={processedSubjects}
+              data={[]}
               rowsPerPage={rowsPerPage}
               page={page}
               handleChangePage={handleChangePage}

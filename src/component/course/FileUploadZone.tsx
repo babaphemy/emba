@@ -78,7 +78,7 @@ const FileUploadZone: React.FC<FileUploadProps> = ({
       setUploadedFile(filePath);
       clearErrors(fieldName);
       notifySuccess(`${lessonType} uploaded successfully!`);
-    } catch (error) {
+    } catch {
       notifyError(`Failed to upload ${lessonType.toLowerCase()}`);
       setError(`topics.${topicIndex}.lessons.${lessonIndex}.content`, {
         type: "manual",

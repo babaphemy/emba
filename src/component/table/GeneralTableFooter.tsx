@@ -119,7 +119,6 @@ const GeneralTableFooter: React.FC<GeneralTableFooterProps> = ({
   handleChangeRowsPerPage = () => {},
   data,
 }) => {
-  const pageCount = Math.ceil(data.length / rowsPerPage);
   const startIndex = page * rowsPerPage + 1;
   const endIndex = Math.min((page + 1) * rowsPerPage, data.length);
 

@@ -3,7 +3,9 @@ const Homecontact = () => {
   return (
     <section className="py-16">
       <div className="container mx-auto px-4 text-center">
-        <h2 className="text-4xl font-bold text-pink-500 mb-4">LET'S TALK</h2>
+        <h2 className="text-4xl font-bold text-pink-500 mb-4">
+          LET&apos;S TALK
+        </h2>
         <p className="text-gray-600 mb-8">
           The best learning platform is built but none is perfect for your
           needs.

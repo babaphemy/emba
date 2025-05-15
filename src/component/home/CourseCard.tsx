@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
 const Coursecard = () => {
   return (
     <section className="bg-gray-900 py-16">
@@ -6,13 +7,15 @@ const Coursecard = () => {
         <div className="grid md:grid-cols-3 gap-8">
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-6">
-              <img
+              <Image
+                width={300}
+                height={200}
                 src="/api/placeholder/300/200"
                 alt="Workforce"
                 className="w-full rounded mb-4"
               />
               <h3 className="text-white text-2xl font-bold mb-2">
-                IT'S TIME TO EVOLVE YOUR
+                IT&apos;S TIME TO EVOLVE YOUR
                 <br />
                 <span className="text-pink-500">WORKFORCE</span>
               </h3>
@@ -33,7 +36,9 @@ const Coursecard = () => {
 
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-6">
-              <img
+              <Image
+                width={300}
+                height={200}
                 src="/api/placeholder/300/200"
                 alt="Classroom"
                 className="w-full rounded mb-4"
@@ -68,7 +73,9 @@ const Coursecard = () => {
 
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-6">
-              <img
+              <Image
+                width={300}
+                height={200}
                 src="/api/placeholder/300/200"
                 alt="Career"
                 className="w-full rounded mb-4"

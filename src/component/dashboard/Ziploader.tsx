@@ -25,13 +25,6 @@ const Ziploader: React.FC<ZipLoaderProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [uploadComplete, setUploadComplete] = useState(false);
 
-  const acceptedTypes = {
-    "application/zip": [".zip"],
-    "application/x-zip-compressed": [".zip"],
-    "application/x-rar-compressed": [".rar"],
-    "application/x-7z-compressed": [".7z"],
-  };
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);

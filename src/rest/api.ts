@@ -135,6 +135,7 @@ const uploadImageToS3 = async (imageBinary: Blob): Promise<string> => {
   }
   return resp.json();
 };
+
 export {
   getUsers,
   getAllUsers,

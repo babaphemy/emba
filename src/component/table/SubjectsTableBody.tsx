@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { MoreHorizontal, FileEdit, Eye } from "lucide-react";
 import { CourseCreate } from "@/types/types";
 import { categories } from "../course/CourseDashboard";
@@ -79,10 +79,10 @@ const SubjectsTableBody: React.FC<SubjectsTableBodyProps> = ({
               {currentCategory || "-"}
             </TableCell>
 
-            <TableCell className="text-center">
+            {/* <TableCell className="text-center">
               {course?.assetCount?.topicCount || 0} Topics,{" "}
               {course?.assetCount?.lessonCount || 0} Lessons
-            </TableCell>
+            </TableCell> */}
 
             <TableCell className="text-right">
               <DropdownMenu>

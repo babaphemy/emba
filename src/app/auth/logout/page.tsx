@@ -1,11 +1,11 @@
-'use client';
-import useUser from '@/hooks/useUser';
-import { Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import { Box } from '@mui/system';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect } from 'react';
+"use client";
+
+import { useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import useUser from "@/hooks/useUser";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Logout() {
   const { removeUser } = useUser();
@@ -13,82 +13,52 @@ export default function Logout() {
   useEffect(() => {
     removeUser();
   }, [removeUser]);
-  return (
-    <>
-      <div className="authenticationBox">
-        <Box
-          component="main"
-          sx={{
-            padding: '70px 0 100px'
-          }}
-        >
-          <Box
-            sx={{
-              background: '#fff',
-              padding: '30px 20px',
-              borderRadius: '10px',
-              maxWidth: '510px',
-              ml: 'auto',
-              mr: 'auto',
-              textAlign: 'center'
-            }}
-            className="bg-black"
-          >
-            <Box>
-              <Link href="/" passHref>
-                <Image
-                  src="/images/logo.png"
-                  alt="Black logo"
-                  width={250}
-                  height={100}
-                  className="black-logo"
-                  priority
-                />
-              </Link>
 
+  return (
+    <div className="min-h-screen flex items-center justify-center py-16 px-4">
+      <Card className="w-full max-w-md mx-auto text-center bg-white dark:bg-gray-900">
+        <CardContent className="p-8">
+          <div className="mb-6">
+            <Link href="/" className="inline-block">
               <Image
-                src="/images/logo-white.png"
-                alt="White logo"
+                src="/images/logo.png"
+                alt="Logo"
                 width={250}
                 height={100}
-                className="white-logo"
+                className="block dark:hidden"
+                priority
               />
-            </Box>
-
-            <Box mt={4} mb={4}>
               <Image
-                width={100}
+                src="/images/logo-white.png"
+                alt="Logo"
+                width={250}
                 height={100}
-                src="/images/coffee.png"
-                alt="Coffee"
+                className="hidden dark:block"
               />
-            </Box>
+            </Link>
+          </div>
 
-            <Typography variant="h1" fontSize="20px" fontWeight="500" mb={1}>
-              You are Logged Out
-            </Typography>
+          <div className="mb-8">
+            <Image
+              width={100}
+              height={100}
+              src="/images/coffee.png"
+              alt="Coffee"
+              className="mx-auto"
+            />
+          </div>
 
-            <Typography>Thank you for using Horace LMS</Typography>
+          <h1 className="text-xl font-medium mb-2">You are Logged Out</h1>
 
-            <Button
-              href="/login/"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                textTransform: 'capitalize',
-                borderRadius: '8px',
-                fontWeight: '500',
-                fontSize: '16px',
-                padding: '12px 10px',
-                color: '#fff !important'
-              }}
-            >
-              Sign In
-            </Button>
-          </Box>
-        </Box>
-      </div>
-    </>
+          <p className="text-gray-500 dark:text-gray-400 mb-6">
+            Thank you for using Horace LMS
+          </p>
+
+          <Button asChild className="w-full py-3 px-4 rounded-lg text-base">
+            <Link href="/login">Sign In</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

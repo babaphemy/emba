@@ -113,7 +113,7 @@ const LeftSide: React.FC<SidebarProps> = ({ toogleActive }) => {
         }
       });
     } else return [];
-  }, [navData, session?.user?.roles]);
+  }, [session?.user?.roles]);
 
   return (
     <>

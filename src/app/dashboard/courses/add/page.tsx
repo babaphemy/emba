@@ -5,13 +5,10 @@ import AddCourseForm from "@/component/course/AddCourseForm";
 import AddLessonForm from "@/component/course/AddLessonForm";
 import AddTopicForm from "@/component/course/AddTopicForm";
 import ReviewSubjectForm from "@/component/course/ReviewSubjectForm";
-import { notifyError, notifySuccess } from "@/lib/notification";
-import { addSubjectComplete } from "@/rest/api";
 import { CourseComplete, LESSONTYPE } from "@/types/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Save, ChevronLeft, ChevronRight } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { JSX, useState } from "react";
 import {
   FieldError,
@@ -19,7 +16,6 @@ import {
   FormProvider,
   useForm,
 } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
 import * as yup from "yup";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -53,15 +49,13 @@ const renderErrors = (errors: FieldErrors, parentKey = ""): JSX.Element[] => {
 };
 
 const SubjectCreatePage = () => {
-  const router = useRouter();
   const { data: session } = useSession();
   const [activeStep, setActiveStep] = useState(0);
   const [isLoading] = useState(false);
-  const queryClient = useQueryClient();
 
   const defaultValues: CourseComplete = {
     id: undefined,
-    user: session?.id || "",
+    user: session?.user?.id || "",
     courseName: "",
     category: "",
     target: "",
@@ -116,23 +110,24 @@ const SubjectCreatePage = () => {
     setActiveStep((prev) => Math.max(prev - 1, 0));
   };
 
-  const { mutate } = useMutation({
-    mutationFn: addSubjectComplete,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["subjects"] });
-      notifySuccess("New Subject created successfully");
-      router.push("/lms-courses");
-      methods.reset(defaultValues);
-      return;
-    },
-    onError: () => {
-      notifyError("Failed to create new subject, Try again!!!");
-      return;
-    },
-  });
+  // const { mutate } = useMutation({
+  //   mutationFn: addSubjectComplete,
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ["subjects"] });
+  //     notifySuccess("New Subject created successfully");
+  //     router.push("/lms-courses");
+  //     methods.reset(defaultValues);
+  //     return;
+  //   },
+  //   onError: () => {
+  //     notifyError("Failed to create new subject, Try again!!!");
+  //     return;
+  //   },
+  // });
 
   async function onSubmit(values: yup.InferType<typeof courseCompleteSchema>) {
-    mutate(values);
+    console.log("Form submitted:", values);
+    //mutate(c);
   }
 
   const renderStepContent = (step: number) => {

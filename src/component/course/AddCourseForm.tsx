@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/form";
 import { categories } from "./CourseDashboard";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const IMAGE_TYPES = {
   "image/jpeg": [".jpg", ".jpeg"],
@@ -40,8 +41,8 @@ const AddCourseForm = () => {
   const { control, setValue } = useFormContext();
   const [checked, setChecked] = React.useState(false);
   const [uploading, setUploading] = React.useState(false);
-  const [uploadProgress, setUploadProgress] = React.useState(0);
-  const [uploadedImage, setUploadedImage] = React.useState<string>("");
+  const [uploadProgress] = React.useState(0);
+
   const [imagePreview, setImagePreview] = React.useState<string>("");
 
   const handleUpload = async (file: File) => {
@@ -60,9 +61,9 @@ const AddCourseForm = () => {
 
       setValue("thumbnail", uploadUrl);
       setValue("file", file);
-      setUploadedImage(uploadUrl);
+
       notifySuccess("Thumbnail uploaded successfully!");
-    } catch (error) {
+    } catch {
       notifyError("Failed to upload image. Please try again.");
       setImagePreview("");
     } finally {
@@ -73,7 +74,7 @@ const AddCourseForm = () => {
   const removeImage = () => {
     setValue("thumbnail", "");
     setValue("file", null);
-    setUploadedImage("");
+
     setImagePreview("");
   };
 
@@ -96,7 +97,7 @@ const AddCourseForm = () => {
         control={control}
         name="courseName"
         rules={{ required: "Course name is required" }}
-        render={({ field, fieldState }) => (
+        render={({ field }) => (
           <FormItem>
             <FormLabel>Course Title *</FormLabel>
             <FormControl>
@@ -110,7 +111,7 @@ const AddCourseForm = () => {
       <FormField
         control={control}
         name="category"
-        render={({ field, fieldState }) => (
+        render={({ field }) => (
           <FormItem>
             <FormLabel>Content Category</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -183,7 +184,7 @@ const AddCourseForm = () => {
         control={control}
         name="file"
         rules={{ required: "Course display image is required" }}
-        render={({ field }) => (
+        render={() => (
           <FormItem>
             <FormLabel>Course Display Image *</FormLabel>
             <FormControl>
@@ -228,7 +229,8 @@ const AddCourseForm = () => {
                 ) : (
                   <div className="border rounded-lg p-4">
                     <div className="relative mb-2">
-                      <img
+                      <Image
+                        height={300}
                         src={imagePreview}
                         alt="Course thumbnail preview"
                         className="w-full max-h-[300px] object-cover rounded-lg"
