@@ -1,9 +1,9 @@
-import { Box } from "@mui/material"
-import { useParams } from "next/navigation"
+"use client";
+import { useParams } from "next/navigation";
 
 const EditCoursePage = () => {
-    const params = useParams()
-    const {cid} = params
-    return <Box>Edit Course {cid}</Box>
-}
-export default EditCoursePage
+  const params = useParams();
+  const { id } = params;
+  return <div>Edit Course {id}</div>;
+};
+export default EditCoursePage;
