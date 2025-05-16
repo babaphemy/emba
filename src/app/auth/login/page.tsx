@@ -3,14 +3,11 @@
 import Image from "next/image";
 import LoginComponent from "@/component/user/LoginComponent";
 
-import Header from "@/component/home/Header";
 import Footer from "@/component/dashboard/Footer";
 
 export default function Login() {
   return (
     <div id="login-component" className="min-h-screen flex flex-col">
-      <Header />
-
       <main className="flex-grow bg-gray-50 dark:bg-gray-900 py-10 md:py-16">
         <div className="container mx-auto px-4">
           <div className="flex justify-center items-center">

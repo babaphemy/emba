@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import Image from "next/image";
 
 import ForgotPasswordComponent from "@/component/user/ForgotPasswordComponent";
-import Header from "@/component/home/Header";
 import Footer from "@/component/dashboard/Footer";
 
 const ForgotPassword = () => {
@@ -14,8 +13,6 @@ const ForgotPassword = () => {
         id="forgot-password-component"
         className="min-h-screen flex flex-col"
       >
-        <Header />
-
         <main className="flex-grow py-8 md:py-12">
           <div className="container mx-auto px-4">
             <div className="flex justify-center items-center">
